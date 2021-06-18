@@ -1,0 +1,48 @@
+// @import './어쩌구.css'; => css 파일간 import
+
+// 변수만들어서 사용 가능 => $변수명 : 집어넣을값;
+$main : #f18e32;
+
+.red {
+    color: $main;
+}
+//nesting 문법
+.container {
+    h4 {
+        color: rgb(96, 143, 90);
+    }
+}
+
+.my-alert {
+    width: 60%;
+    margin: 0 auto;
+    color: crimson;
+    background-color: rgb(168, 188, 226);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+//@extend 재사용할꺼 : 재사용할 모든 내용이 복사됨
+.my-alert-yellow {
+    @extend .my-alert;
+    background-color: rgb(241, 243, 145);
+}
+
+p {
+    margin-bottom: 0;
+}
+
+//@mixin / @include 문법 : 함수명이 위에 선언되어있어야 밑에서 사용가능
+@mixin alert() {
+    width: 60%;
+    margin: 0 auto;
+    color: crimson;
+    background-color: rgb(168, 188, 226);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.my-alert {
+    @include alert()
+}
+
