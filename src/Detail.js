@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
+import { Nav } from 'react-bootstrap';
 import styled from 'styled-components'
 import './Detail.scss'
+import {storeContext} from './App'
+import { CSSTransition } from 'react-transition-group'
 
 const Detail = ({shoes, store, setStore}) => {
+    //let store = useContext(storeContext)
     //뒤로가기 : history.goBack()
     //특정 경로로 이동 : history.push('경로')
     let history = useHistory()
@@ -16,6 +20,8 @@ const Detail = ({shoes, store, setStore}) => {
 
     const [text, setText] = useState('')
     const [alert, setAlert] = useState(false)
+    const [tab, setTab] = useState(0)
+    const [ani, setAni] = useState(false)
     //컴포넌트가 mount 되었을 때, 컴포넌트가 update될 때 특정 코드 실행
     useEffect(() => {
         let time = setTimeout(() => {
@@ -36,22 +42,51 @@ const Detail = ({shoes, store, setStore}) => {
             }
             <div className="row">
                 <div className="col-md-6">
-                <img src={findItem.src} width="100%" />
+                    <img src={findItem.src} width="100%" />
                 </div>
                 <div className="col-md-6 mt-4">
-                <h4 className="pt-5">{findItem.title}</h4>
-                <p>{findItem.content}</p>
-                <p>{findItem.price}원</p>
-                    <Info store={store}/>
-                <button className="btn btn-danger" onClick={() => setStore(store - 1)}>주문하기</button> 
-                <button className="btn btn-danger" onClick={() => history.goBack()}>뒤로가기</button> 
+                    <h4 className="pt-5">{findItem.title}</h4>
+                    <p>{findItem.content}</p>
+                    <p>{findItem.price}원</p>
+                        <Info store={store}/>
+                    <button className="btn btn-danger" onClick={() => setStore(store - 1)}>주문하기</button> 
+                    <button className="btn btn-danger" onClick={() => history.goBack()}>뒤로가기</button> 
                 </div>
-          </div>
+            </div>
+
+            {/* tab */}
+            <Nav className="mt-5" variant="tabs" defaultActiveKey="link-0">
+                <Nav.Item>
+                    <Nav.Link eventKey="link-0" onClick={() => {setAni(false); setTab(0)}}>Active</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-1" onClick={() => {setAni(false); setTab(1)}}>Option 2</Nav.Link>
+                </Nav.Item>
+            </Nav>
+
+            {/* in은 일종의 스위치로 true일때만 애니메이션을 적용해줌 */}
+            <CSSTransition in={ani} classNames="wow" timeout={500}>
+                <TabContent tab={tab} setAni={setAni} ani={ani}/>
+            </CSSTransition>
         </div>
     );
 };
 
+// if문 사용한 컴포넌트
+function TabContent({tab, setAni, ani}){
+    useEffect(() => {
+        setAni(true)
+    },[ani])
+
+    if(tab === 0){
+        return <div>0번째 내용입니다.</div>
+    } else if(tab === 1){
+        return <div>1번째 내용입니다.</div>
+    }
+}
+
 function Info({store}){
+    //let store = useContext(storeContext)
     return (
         <p>재고 : {store} </p>
     );

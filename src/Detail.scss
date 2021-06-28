@@ -46,3 +46,12 @@ p {
     @include alert()
 }
 
+// 컴포넌트 등장 시작시 적용할 css
+.wow-enter {
+    opacity: 0;
+}
+//컴포넌트 동작시 적용할 css
+.wow-enter-active {
+    opacity: 1;
+    transition: all 500ms;
+}
