@@ -1,11 +1,14 @@
 /* eslint-disable */
 import './App.css';
-import { Navbar, Nav, NavDropdown, Jumbotron, Button } from 'react-bootstrap';
+import { Navbar, Nav, Jumbotron, Button } from 'react-bootstrap';
 import { Link, Route, Switch } from 'react-router-dom'
-import { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import data from './data'
 import Detail from './Detail';
 import axios from 'axios'
+
+//다른 컴포넌트에서 사용 가능하도록 내보내기
+export let storeContext = React.createContext();//state 공유할 범위 생성
 
 function App() {
   
@@ -50,9 +53,13 @@ function App() {
           </Jumbotron>
 
           <div className="container">
-            <div className="row">
-              { shoes.map(item => <Item key={item.id} item={item}/>) }
-            </div>
+
+            <storeContext.Provider value={store}>
+              <div className="row">
+                { shoes.map(item => <Item key={item.id} item={item}/>) }
+              </div>
+            </storeContext.Provider>
+
             <Button variant="primary" onClick={() => {
               /*
               post 요청하기
@@ -79,7 +86,9 @@ function App() {
         </Route>
         {/* :id => id 부분은 파라미터처럼 자유롭게 작명가능 , /detail/0으로 접속하면 0번째 상품명 */}
         <Route path="/detail/:id">
-          <Detail shoes={shoes} store={store} setStore={setStore}/>
+          <storeContext.Provider value={store}>
+            <Detail shoes={shoes} store={store} setStore={setStore}/>
+          </storeContext.Provider>
         </Route>
       </Switch>
     </div>
@@ -88,11 +97,14 @@ function App() {
 
 function Item({item}){
   const {id, title, content, price, src} = item
+  let store = useContext(storeContext)
+
   return (
     <div className="col-md-4">
       <img src={src} width="100%"/>
       <h4>{title}</h4>
       <p>{content} & {price}</p>
+      {store}
     </div>
   );
 }
